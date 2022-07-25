@@ -3,7 +3,9 @@
 A new Flutter project.
 
 ## Getting Started
-
+# - [] sending http requests
+# - [] state Management
+# - [] futures
 # - [] adding and deleting product
 # - [] adding products to cart
 

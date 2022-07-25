@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "874510240424",
+    "firebase_url": "https://shopappcourse-4f632-default-rtdb.firebaseio.com",
+    "project_id": "shopappcourse-4f632",
+    "storage_bucket": "shopappcourse-4f632.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874510240424:android:abd34cbaff8367aac3d09d",
+        "android_client_info": {
+          "package_name": "com.example.shop_course"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "874510240424-9c5dr3nj7futhg0r8r1gtvdol1h30ap3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrPeJywtlVfMd8LfDvBjvoPz5vi0sCWt8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "874510240424-9c5dr3nj7futhg0r8r1gtvdol1h30ap3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

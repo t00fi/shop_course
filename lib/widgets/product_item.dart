@@ -37,10 +37,13 @@ class ProductItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: GridTile(
-        header: Text(
-          eachProduct.title,
-          style: const TextStyle(
-            fontSize: 16.0,
+        header: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Text(
+            eachProduct.title,
+            style: const TextStyle(
+              fontSize: 16.0,
+            ),
           ),
         ),
         footer: GridTileBar(

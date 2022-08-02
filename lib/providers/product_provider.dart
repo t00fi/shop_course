@@ -111,8 +111,8 @@ class ProdcutProvider with ChangeNotifier {
     //and create a file with name poriducts.json
     //first we should bring the url in fire stor then specify the file.json
     // (/products.json) added to firebase link not all databases is work like that with endpoints.
-    const url =
-        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products.json';
+    final url =
+        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products.json?auth=$_getAuthToken';
 
     try {
       final response = await http.post(
@@ -127,7 +127,7 @@ class ProdcutProvider with ChangeNotifier {
         }),
         //the reason i didnt call catError() here because if there is an error from the request this method will call then then() method will call and because if its error it mean i dont want to add anything thats why i dont want call then() method if there is err i will call it after then() mthod and if there is an error then() method will be skiped
       ); //.catchError((err){
-      print(response.body);
+      //print(response.body);
       final newproduct = Product(
         //the id will the response key we see in each products key
         id: jsonDecode(response.body)['name'],
@@ -182,7 +182,7 @@ class ProdcutProvider with ChangeNotifier {
     if (productindex >= 0) {
       //for addProduct() and fetchData() we use url and its path refrenced to all products but here i want to work with specific product which we specify it id.
       final url =
-          'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products/$id.json';
+          'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products/$id.json?auth=$_getAuthToken';
       //sending patch() request to firebase which is a request merge old value with new value
       await http.patch(
         Uri.parse(url.toString()),
@@ -205,7 +205,7 @@ class ProdcutProvider with ChangeNotifier {
 //method to delete item from manage products section
   Future<void> removeItem(String id) async {
     final url =
-        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products/$id.json';
+        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products/$id.json?auth=$_getAuthToken';
     /** implementing optimistic update
      * 1- create a variable to get the index of the specific product by id
      * 2- create a variable which holds a copy of the product. which will be added again to the _items list if the    request is failed , if successed will be null.

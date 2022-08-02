@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_course/providers/auth.dart';
 import 'package:shop_course/providers/products.dart';
 import 'package:shop_course/screens/product_detail.dart';
 
@@ -31,6 +32,8 @@ class ProductItem extends StatelessWidget {
     //here i used only to get data and show it the favorite button we will use Consumer instead
     final eachProduct = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
+    //auth provider initialized here because i want to pass token to toggleFavorite of each products for each user.
+    final authData = Provider.of<Auth>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: GridTile(
@@ -53,7 +56,7 @@ class ProductItem extends StatelessWidget {
               ),
               onPressed: () {
                 //method to check value of isFavorite for the product in Product.dart
-                eachProduct.toggleFavorite(eachProduct.id);
+                eachProduct.toggleFavorite(authData.token);
               },
             ),
           ),

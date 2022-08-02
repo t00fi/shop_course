@@ -20,9 +20,7 @@ class Auth with ChangeNotifier {
 
 //getter to check the expire date and token and call it in (isAuth) getter above.
   String get token {
-    if (_token != '' &&
-        _expiryDateToken != null &&
-        _expiryDateToken.isAfter(DateTime.now())) {
+    if (_token != '' && _expiryDateToken.isAfter(DateTime.now())) {
       return _token;
     }
     return '';
@@ -31,9 +29,9 @@ class Auth with ChangeNotifier {
 //authinticate method
 //the url link is same for signup and sign in just the segment change .
   Future<void> _authinticate(
-      String email, String password, String UrlSegment) async {
+      String email, String password, String urlSegment) async {
     final url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:$UrlSegment?key=AIzaSyBrPeJywtlVfMd8LfDvBjvoPz5vi0sCWt8';
+        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyBrPeJywtlVfMd8LfDvBjvoPz5vi0sCWt8';
     try {
       //the post request also is in the {firebase auth rest api} website watch to learn more.
       final resposne = await http.post(

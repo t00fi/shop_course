@@ -38,7 +38,21 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => ProdcutProvider(),
+          create: (ctx) => Auth(),
+        ),
+
+        /// changed from (ChangeNotifierProvider-->ChangeNotifierProxyProvider) provider.
+        /// because i need data from another provider.
+        /// the provider which send the requred value should be initilized above it. like here (Auth) provider is abover ProductProvider.
+        /// we should specify the provider which take value from it.
+        /// also specify the provider with the other which need the value .
+        /// when ever the Auth provider changes or notifyListern the ProductProvider provier will re-build
+        ChangeNotifierProxyProvider<Auth, ProdcutProvider>(
+          //thir paramaeter consist of old provider data.
+          //setAuthToken=auth.token -> this is how setter initialzed in dart
+          update: (ctx, auth, previousProductProvider) =>
+              previousProductProvider!..setAuthToken = auth.token,
+          create: (ctx) => ProdcutProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),
@@ -46,31 +60,34 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Orders(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => Auth(),
-        ),
       ],
-      child: MaterialApp(
-        title: 'MyShop',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.amber,
-            primary: Colors.red[300],
-            secondary: Colors.deepOrange,
+      //we wrap material app in Consumer because i dont want to rebuild whole widget just because the user is loged in or logged out.
+      //
+      child: Consumer<Auth>(
+        builder: (context, auth, _) => MaterialApp(
+          title: 'MyShop',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.amber,
+              primary: Colors.red[300],
+              secondary: Colors.deepOrange,
+            ),
+            fontFamily: 'Lato',
           ),
-          fontFamily: 'Lato',
+          //home: ProductOverview(),
+          initialRoute:
+              //if token isnot authinticated go back to login/signup page
+              auth.isAuth ? ProductOverview.routeName : AuthScreen.routeName,
+          routes: {
+            ProductOverview.routeName: (context) => const ProductOverview(),
+            ProductDetail.routName: (ctx) => const ProductDetail(),
+            CartScreen.routeName: (ctx) => const CartScreen(),
+            OrderScreen.routeName: (context) => const OrderScreen(),
+            UserProduct.routeName: (context) => const UserProduct(),
+            EditProducts.routeName: (context) => const EditProducts(),
+            AuthScreen.routeName: (context) => const AuthScreen(),
+          },
         ),
-        //home: ProductOverview(),
-        initialRoute: AuthScreen.routeName,
-        routes: {
-          ProductOverview.routeName: (context) => const ProductOverview(),
-          ProductDetail.routName: (ctx) => const ProductDetail(),
-          CartScreen.routeName: (ctx) => const CartScreen(),
-          OrderScreen.routeName: (context) => const OrderScreen(),
-          UserProduct.routeName: (context) => const UserProduct(),
-          EditProducts.routeName: (context) => const EditProducts(),
-          AuthScreen.routeName: (context) => const AuthScreen(),
-        },
       ),
     );
   }

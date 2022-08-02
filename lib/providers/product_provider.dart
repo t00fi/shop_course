@@ -55,32 +55,47 @@ class ProdcutProvider with ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
+//the variable authToken here is needed for sending the request to fetch our data.
+////we get the token by setter method.
+  late String _authToken;
+
+  set setAuthToken(String authToken) {
+    _authToken = authToken;
+  }
+
+//getter method
+  String get _getAuthToken => _authToken;
+
 //fetch data from firebase
   Future<void> fetchData() async {
-    const url =
-        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products.json';
+    //sending the authToken to the query parameter.
+    //some other Api's require to send the token by headers in post() request method.
+    final url =
+        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products.json?auth=$_getAuthToken';
     try {
       final response = await http.get(Uri.parse(url.toString()));
       //if your print the response you will get data as Map<String, dynamic>
-      final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData.isEmpty) {
         return;
       }
       final List<Product> loadedProduct = [];
       //for the map we got we will go through each product to add to our list
-      extractedData.forEach((key, productData) {
-        loadedProduct.insert(
-          0,
-          Product(
-            id: key,
-            title: productData['title'],
-            description: productData['description'],
-            price: productData['price'],
-            imageUrl: productData['imageUrl'],
-            isFavorite: productData['isFavorite'],
-          ),
-        );
-      });
+      extractedData.forEach(
+        (key, productData) {
+          loadedProduct.insert(
+            0,
+            Product(
+              id: key,
+              title: productData['title'],
+              description: productData['description'],
+              price: productData['price'],
+              imageUrl: productData['imageUrl'],
+              isFavorite: productData['isFavorite'],
+            ),
+          );
+        },
+      );
       _items = loadedProduct;
       notifyListeners();
     } catch (err) {

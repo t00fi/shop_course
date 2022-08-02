@@ -25,10 +25,20 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
+//the variable authToken here is needed for sending the request to fetch our orders.
+////we get the token by setter method.
+  late String _authToken;
+
+  set setAuthToken(String authToken) {
+    _authToken = authToken;
+  }
+
+//getter method
+  String get _getAuthToken => _authToken;
   //fetch orders from firebase
   Future<void> fetchOrders() async {
-    const url =
-        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/orders.json';
+    final url =
+        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/orders.json?auth=$_getAuthToken';
     //send get() request
     final response = await http.get(Uri.parse(url));
     final extractedOrders = jsonDecode(response.body) as Map<String, dynamic>;
@@ -67,8 +77,8 @@ class Orders with ChangeNotifier {
     //i wrtoe 0 to parameter because last order i want to be most recent one to be add not add to last one
     //timeStamp variable is used because when we add orders it will wait for a seconds so the time which will be added to the firebase will be different with time added to orderStructure().
     final timeStamp = DateTime.now();
-    const url =
-        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/orders.json';
+    final url =
+        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/orders.json?auth=$_getAuthToken';
     try {
       final response = await http.post(
         Uri.parse(url),

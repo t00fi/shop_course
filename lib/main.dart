@@ -52,7 +52,9 @@ class MyApp extends StatelessWidget {
           //thir paramaeter consist of old provider data.
           //setAuthToken=auth.token -> this is how setter initialzed in dart
           update: (ctx, auth, previousProductProvider) =>
-              previousProductProvider!..setAuthToken = auth.token,
+              previousProductProvider!
+                ..setAuthToken = auth.token
+                ..setUserId = auth.userId,
           create: (ctx) => ProdcutProvider(),
         ),
         ChangeNotifierProvider(

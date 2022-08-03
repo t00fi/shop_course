@@ -42,9 +42,15 @@ class Product with ChangeNotifier {
   }
 
 //passing user token  to see each user's favorite products
-  Future<void> toggleFavorite(String token) async {
-    final url =
+  Future<void> toggleFavorite(String token, String userId) async {
+    /**
+     * Before: was for al user:
+     * final url =
         'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products/$id.json?auth=$token';
+     */
+    //after authintication:
+    final url =
+        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$token';
     //get old value of favorite before chnge it
     final oldStatus = isFavorite;
     //if its false make it true else make it true
@@ -53,13 +59,26 @@ class Product with ChangeNotifier {
     //http reques will not throw excepton for (delete,patch) request so we check for err by if statement to check the http status code.
     //the catch() is for network errs in case we have it not fot http request as we said it will not throw exception.
     try {
-      //send patch() request to toggle favorite
+      /**
+       * patch(): is also like post request but if the prodcut is exist will update it ,but if not it will append the product.
+       * before was patch() request to update:
+       *  //send patch() request to toggle favorite
       final response = await http.patch(
         Uri.parse(url),
         body: json.encode(
           {
             'isFavorite': isFavorite,
           },
+        ),
+      );
+       */
+
+      //send put() request to toggle favorite and ovverride it for each user
+      //put() request is for overriding
+      final response = await http.put(
+        Uri.parse(url),
+        body: json.encode(
+          isFavorite,
         ),
       );
       if (response.statusCode >= 400) {

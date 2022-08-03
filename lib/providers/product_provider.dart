@@ -58,20 +58,46 @@ class ProdcutProvider with ChangeNotifier {
 //the variable authToken here is needed for sending the request to fetch our data.
 ////we get the token by setter method.
   late String _authToken;
+  late String _userId;
 
+  //setters
   set setAuthToken(String authToken) {
     _authToken = authToken;
   }
 
-//getter method
+  set setUserId(String userId) {
+    _userId = userId;
+  }
+
+//getters
   String get _getAuthToken => _authToken;
+  String get _getUserId => _userId;
 
 //fetch data from firebase
-  Future<void> fetchData() async {
+//to set the default value for positinal paramaeter we should wrap it the variable in [] and specify its default value
+  Future<void> fetchData([bool isFiltered = false]) async {
     //sending the authToken to the query parameter.
     //some other Api's require to send the token by headers in post() request method.
-    final url =
-        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products.json?auth=$_getAuthToken';
+    //order by creatorId where user=userId logged in
+    /**
+     * but we should add index to my products because we have orderBy:
+     * 
+     * {
+     * "rules": {
+                ".read":"auth!=null" ,	 // 2022-8-12
+                ".write":"auth!=null", 	// 2022-8-12
+                 "products":{
+                  ".indexOn":["creatorId"],
+      }
+  }
+}
+     * 
+     */
+    final filterString =
+        isFiltered ? '&orderBy="creatorId"&equalTo="$_getUserId"' : '';
+    var url =
+        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/products.json?auth=$_getAuthToken$filterString';
+
     try {
       final response = await http.get(Uri.parse(url.toString()));
       //if your print the response you will get data as Map<String, dynamic>
@@ -79,6 +105,12 @@ class ProdcutProvider with ChangeNotifier {
       if (extractedData.isEmpty) {
         return;
       }
+      //fav url
+      url =
+          'https://shopappcourse-4f632-default-rtdb.firebaseio.com/userFavorites/$_getUserId.json/?auth=$_getAuthToken';
+      //fetching favorite products for each user
+      final favoriteResponse = await http.get(Uri.parse(url));
+      final favResponseData = json.decode(favoriteResponse.body);
       final List<Product> loadedProduct = [];
       //for the map we got we will go through each product to add to our list
       extractedData.forEach(
@@ -91,7 +123,9 @@ class ProdcutProvider with ChangeNotifier {
               description: productData['description'],
               price: productData['price'],
               imageUrl: productData['imageUrl'],
-              isFavorite: productData['isFavorite'],
+              isFavorite: favResponseData == null
+                  ? false
+                  : favResponseData[key] ?? false,
             ),
           );
         },
@@ -123,7 +157,7 @@ class ProdcutProvider with ChangeNotifier {
           'description': product.description,
           'price': product.price,
           'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite,
+          'creatorId': _getUserId,
         }),
         //the reason i didnt call catError() here because if there is an error from the request this method will call then then() method will call and because if its error it mean i dont want to add anything thats why i dont want call then() method if there is err i will call it after then() mthod and if there is an error then() method will be skiped
       ); //.catchError((err){

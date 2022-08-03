@@ -4,6 +4,7 @@ import 'package:shop_course/providers/auth.dart';
 import 'package:shop_course/providers/cart.dart';
 import 'package:shop_course/providers/orders.dart';
 import 'package:shop_course/providers/product_provider.dart';
+import 'package:shop_course/route_generator.dart';
 import 'package:shop_course/screens/auth_screen.dart';
 import 'package:shop_course/screens/cart_screen.dart';
 import 'package:shop_course/screens/edit_products.dart';
@@ -78,19 +79,20 @@ class MyApp extends StatelessWidget {
             ),
             fontFamily: 'Lato',
           ),
-          //home: ProductOverview(),
-          initialRoute:
-              //if token isnot authinticated go back to login/signup page
-              auth.isAuth ? ProductOverview.routeName : AuthScreen.routeName,
-          routes: {
-            ProductOverview.routeName: (context) => const ProductOverview(),
-            ProductDetail.routName: (ctx) => const ProductDetail(),
-            CartScreen.routeName: (ctx) => const CartScreen(),
-            OrderScreen.routeName: (context) => const OrderScreen(),
-            UserProduct.routeName: (context) => const UserProduct(),
-            EditProducts.routeName: (context) => const EditProducts(),
-            AuthScreen.routeName: (context) => const AuthScreen(),
-          },
+          home: auth.isAuth ? const ProductOverview() : const AuthScreen(),
+          //initialRoute:
+          //if token isnot authinticated go back to login/signup page
+          //auth.isAuth ? ProductOverview.routeName : AuthScreen.routeName,
+          // routes: {
+          //   ProductOverview.routeName: (context) => const ProductOverview(),
+          //   ProductDetail.routName: (ctx) => const ProductDetail(),
+          //   CartScreen.routeName: (ctx) => const CartScreen(),
+          //   OrderScreen.routeName: (context) => const OrderScreen(),
+          //   UserProduct.routeName: (context) => const UserProduct(),
+          //   EditProducts.routeName: (context) => const EditProducts(),
+          //   AuthScreen.routeName: (context) => const AuthScreen(),
+          // },
+          onGenerateRoute: RouteGenerator.generateRoute,
         ),
       ),
     );

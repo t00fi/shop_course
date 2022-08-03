@@ -26,6 +26,11 @@ class Auth with ChangeNotifier {
     return '';
   }
 
+  //get user id
+  String get userId {
+    return _userId;
+  }
+
 //authinticate method
 //the url link is same for signup and sign in just the segment change .
   Future<void> _authinticate(

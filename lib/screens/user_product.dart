@@ -9,7 +9,7 @@ class UserProduct extends StatelessWidget {
   const UserProduct({Key? key}) : super(key: key);
   static const routeName = '/user-product-screen';
 
-  //a function when the user want to refresh screen fetch newest data
+  //a function when the user want to refresh screen with pulling the screen down fetch newest data
   //but we dont need this function because we already have all data in manage products its just for learning.
   Future<void> _refresData(BuildContext context) async {
     await Provider.of<ProdcutProvider>(context, listen: false).fetchData();

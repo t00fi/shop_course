@@ -59,7 +59,7 @@ class ProductItem extends StatelessWidget {
               ),
               onPressed: () {
                 //method to check value of isFavorite for the product in Product.dart
-                eachProduct.toggleFavorite(authData.token);
+                eachProduct.toggleFavorite(authData.token, authData.userId);
               },
             ),
           ),

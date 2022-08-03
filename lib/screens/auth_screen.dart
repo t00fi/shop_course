@@ -262,6 +262,7 @@ class _AuthCardState extends State<AuthCard> {
                   onPressed: _switchAuthMode,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                  //shrink the tap area of the button
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
                   child: Text(

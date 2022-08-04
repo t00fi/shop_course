@@ -28,20 +28,34 @@ class Orders with ChangeNotifier {
 //the variable authToken here is needed for sending the request to fetch our orders.
 ////we get the token by setter method.
   late String _authToken;
+  late String _userId;
 
+//setters
   set setAuthToken(String authToken) {
     _authToken = authToken;
   }
 
-//getter method
+  set setuserId(String userId) {
+    _userId = userId;
+  }
+
+//getters
   String get _getAuthToken => _authToken;
+  String get getUserId => _userId;
   //fetch orders from firebase
   Future<void> fetchOrders() async {
     final url =
-        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/orders.json?auth=$_getAuthToken';
+        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/orders/$getUserId.json?auth=$_getAuthToken';
     //send get() request
     final response = await http.get(Uri.parse(url));
-    final extractedOrders = jsonDecode(response.body) as Map<String, dynamic>;
+    final Map<String, dynamic> extractedOrders;
+    //check for the response if its null
+    if (json.decode(response.body) == null) {
+      return;
+    } else {
+      extractedOrders = json.decode(response.body);
+    }
+
     if (extractedOrders.isEmpty) {
       return;
     }
@@ -78,7 +92,7 @@ class Orders with ChangeNotifier {
     //timeStamp variable is used because when we add orders it will wait for a seconds so the time which will be added to the firebase will be different with time added to orderStructure().
     final timeStamp = DateTime.now();
     final url =
-        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/orders.json?auth=$_getAuthToken';
+        'https://shopappcourse-4f632-default-rtdb.firebaseio.com/orders/$getUserId.json?auth=$_getAuthToken';
     try {
       final response = await http.post(
         Uri.parse(url),

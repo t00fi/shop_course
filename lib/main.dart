@@ -6,12 +6,8 @@ import 'package:shop_course/providers/orders.dart';
 import 'package:shop_course/providers/product_provider.dart';
 import 'package:shop_course/route_generator.dart';
 import 'package:shop_course/screens/auth_screen.dart';
-import 'package:shop_course/screens/cart_screen.dart';
-import 'package:shop_course/screens/edit_products.dart';
-import 'package:shop_course/screens/orders_screen.dart';
-import 'package:shop_course/screens/product_detail.dart';
 import 'package:shop_course/screens/products_overview.dart';
-import 'package:shop_course/screens/user_product.dart';
+import 'package:shop_course/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -82,7 +78,15 @@ class MyApp extends StatelessWidget {
             ),
             fontFamily: 'Lato',
           ),
-          home: auth.isAuth ? const ProductOverview() : const AuthScreen(),
+          home: auth.isAuth
+              ? const ProductOverview()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (context, AsyncSnapshot snapshot) =>
+                      snapshot.connectionState == ConnectionState.waiting
+                          ? const SplashScreen()
+                          : const AuthScreen(),
+                ),
           //initialRoute:
           //if token isnot authinticated go back to login/signup page
           //auth.isAuth ? ProductOverview.routeName : AuthScreen.routeName,

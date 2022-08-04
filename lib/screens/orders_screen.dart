@@ -14,9 +14,7 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  /**
-   *  we can use this provider without future property because we use listen:false.
-   */
+  ///  we can use this provider without future property because we use listen:false.
   //     await Provider.of<Orders>(context, listen: false).fetchOrders();
   //     setState(() {
   //       _isLoading = false;

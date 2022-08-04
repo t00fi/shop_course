@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
@@ -11,7 +12,7 @@ class Auth with ChangeNotifier {
   late DateTime
       _expiryDateToken; //token usuallly expire after one hour and this is security mechanism
   String _userId = ''; //each user has its id;
-
+  late Timer _authTimer;
 //getter method to check the token
   bool get isAuth {
     //if getter token is not empty so its authinticated.
@@ -63,8 +64,14 @@ class Auth with ChangeNotifier {
       _token = responseData['idToken'];
       _userId = responseData['localId'];
       //as in firebase documentation is eplained the date should be integer so we parse it to integer and add these secondes.
-      _expiryDateToken = DateTime.now()
-          .add(Duration(seconds: int.parse(responseData['expiresIn'])));
+      _expiryDateToken = DateTime.now().add(
+        Duration(
+          seconds: int.parse(
+            responseData['expiresIn'],
+          ),
+        ),
+      );
+      _autoLogout();
       notifyListeners();
     } catch (err) {
       //this catch hundling error is for other error not statuscode of http request
@@ -81,5 +88,29 @@ class Auth with ChangeNotifier {
   //signin method
   Future<void> signin(String email, String password) async {
     return _authinticate(email, password, 'signInWithPassword');
+  }
+
+  //logout by user when click on logout
+  void logout() {
+    _token = '';
+    _userId = '';
+    if (_authTimer.isActive) {
+      _authTimer.cancel();
+    }
+    notifyListeners();
+  }
+
+  void _autoLogout() {
+    try {
+      //if there is a timer cancel it
+      // if (_authTimer.isActive) {
+      //   _authTimer.cancel();
+      // }
+      //set seconds to logout after these sconds
+      final expirein = _expiryDateToken.difference(DateTime.now()).inSeconds;
+      _authTimer = Timer(Duration(seconds: expirein), logout);
+    } catch (err) {
+      rethrow;
+    }
   }
 }

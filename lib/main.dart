@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_course/helpers/customize_routing_navigation_animation.dart';
 import 'package:shop_course/providers/auth.dart';
 import 'package:shop_course/providers/cart.dart';
 import 'package:shop_course/providers/orders.dart';
@@ -10,6 +11,11 @@ import 'package:shop_course/screens/products_overview.dart';
 import 'package:shop_course/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'screens/cart_screen.dart';
+import 'screens/edit_products.dart';
+import 'screens/orders_screen.dart';
+import 'screens/product_detail.dart';
+import 'screens/user_product.dart';
 
 /// Is an important difference between ChangeNotifierProvider.value and with the create function. When you're using Provider in a single list or grid item, Flatter removes items when they leave the screen and re adds them when they reentered the screen in such situations what actually happens is that the widget itself is reused by Flutter and just the data that's attached to it changes. So Flatter recycles the same widget it doesn't destroy it and recreate it. when we are using Provider with the create function.
 ///when ever we reuse an class mre than one place we shoud use ChangeNotifierProvider without .value()
@@ -71,13 +77,20 @@ class MyApp extends StatelessWidget {
         builder: (context, auth, _) => MaterialApp(
           title: 'MyShop',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.amber,
-              primary: Colors.red[300],
-              secondary: Colors.deepOrange,
-            ),
-            fontFamily: 'Lato',
-          ),
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.amber,
+                primary: Colors.red[300],
+                secondary: Colors.deepOrange,
+              ),
+              fontFamily: 'Lato',
+              //make each platoform page route transtion fade animation from our custom class
+              pageTransitionsTheme: PageTransitionsTheme(
+                builders: {
+                  //made both platform fade
+                  TargetPlatform.android: CustomWholePlatformTransition(),
+                  TargetPlatform.iOS: CustomWholePlatformTransition(),
+                },
+              )),
           home: auth.isAuth
               ? const ProductOverview()
               : FutureBuilder(
@@ -90,16 +103,17 @@ class MyApp extends StatelessWidget {
           //initialRoute:
           //if token isnot authinticated go back to login/signup page
           //auth.isAuth ? ProductOverview.routeName : AuthScreen.routeName,
-          // routes: {
-          //   ProductOverview.routeName: (context) => const ProductOverview(),
-          //   ProductDetail.routName: (ctx) => const ProductDetail(),
-          //   CartScreen.routeName: (ctx) => const CartScreen(),
-          //   OrderScreen.routeName: (context) => const OrderScreen(),
-          //   UserProduct.routeName: (context) => const UserProduct(),
-          //   EditProducts.routeName: (context) => const EditProducts(),
-          //   AuthScreen.routeName: (context) => const AuthScreen(),
-          // },
-          onGenerateRoute: RouteGenerator.generateRoute,
+          routes: {
+            ProductOverview.routeName: (context) => const ProductOverview(),
+            ProductDetail.routName: (ctx) => const ProductDetail(),
+            CartScreen.routeName: (ctx) => const CartScreen(),
+            OrderScreen.routeName: (context) => const OrderScreen(),
+            UserProduct.routeName: (context) => const UserProduct(),
+            EditProducts.routeName: (context) => const EditProducts(),
+            AuthScreen.routeName: (context) => const AuthScreen(),
+          },
+          //route_generator.dart
+          //onGenerateRoute: RouteGenerator.generateRoute,
         ),
       ),
     );

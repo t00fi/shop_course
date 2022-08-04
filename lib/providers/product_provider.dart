@@ -232,7 +232,7 @@ class ProdcutProvider with ChangeNotifier {
       _items[productindex] = product;
       notifyListeners();
     } else {
-      print('Index not in boundary');
+      debugPrint('Index not in boundary');
     }
   }
 

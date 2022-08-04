@@ -63,8 +63,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, Orders>(
           //thir paramaeter consist of old provider data.
           //setAuthToken=auth.token -> this is how setter initialzed in dart
-          update: (ctx, auth, previousOrders) =>
-              previousOrders!..setAuthToken = auth.token,
+          update: (ctx, auth, previousOrders) => previousOrders!
+            ..setAuthToken = auth.token
+            ..setuserId = auth.userId,
           create: (ctx) => Orders(),
         ),
       ],

@@ -112,9 +112,16 @@ class ProductItem extends StatelessWidget {
             Navigator.of(context)
                 .pushNamed(ProductDetail.routName, arguments: eachProduct.id);
           },
-          child: Image.network(
-            eachProduct.imageUrl,
-            fit: BoxFit.cover,
+          //which thing you want to make hero ? its tag must be uinque in both screen
+          //we show this image in detail in product_detail.dart so we should make the image hero there as well.
+          child: Hero(
+            tag: eachProduct.id,
+            //used to before the image is loaded as a placeholder
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/images/placeholder.png'),
+              image: NetworkImage(eachProduct.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),

@@ -15,32 +15,62 @@ class ProductDetail extends StatelessWidget {
         Provider.of<ProdcutProvider>(context, listen: false)
             .findProductId(productId);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loadedProduct.title),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 300,
-            width: double.infinity,
-            child: Image.network(loadedProduct.imageUrl),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            '\$${loadedProduct.price}',
-            style: const TextStyle(fontSize: 20, color: Colors.grey),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            width: double.infinity,
-            child: Text(
-              loadedProduct.description,
-              softWrap: true,
-              textAlign: TextAlign.center,
+      //before sliver widget
+      // appBar: AppBar(
+      //   title: Text(loadedProduct.title),
+      //   centerTitle: true,
+      // ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 300,
+            //when scroll the app bar will appear
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              //size of the z axis of the title (gawra krdn u gchka krd bo nawawa u darawa)
+              expandedTitleScale: 1,
+              title: Text(
+                loadedProduct.title,
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              background: Hero(
+                tag: loadedProduct.id,
+                child: Image.network(
+                  loadedProduct.imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-          )
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                const SizedBox(height: 10),
+                Text(
+                  '\$${loadedProduct.price}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: double.infinity,
+                  child: Text(
+                    loadedProduct.description,
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                //this is just for see our sliver effect
+                const SizedBox(height: 800),
+              ],
+            ),
+          ),
         ],
       ),
     );

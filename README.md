@@ -3,6 +3,7 @@
 A new Flutter project.
 
 ## Getting Started
+# - [] user Authintication with http request 
 # - [] sending http requests
 # - [] state Management
 # - [] futures

@@ -10,6 +10,22 @@ A new Flutter project.
 # - [] adding and deleting product
 # - [] adding products to cart
 
+##how to debug:
+# - create a project in your firebase.
+# - create email/password Authentication.
+# - create realtime database.
+# - make your rules as:
+{
+"rules":{
+"read":"auth!=null",
+"Write":"auth!=null"
+}
+"products":{
+".indexOf":["creatorId"]
+}
+}
+
+# - overrode firbase url in source code with your realtime database URL
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
